@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.tingcream.ssoServer.mapper.UserMapper" > 
+ 
+   <insert id="save" parameterType="User"> 
+       INSERT INTO t_user(`userId`,`username`,`password`,`birthday`,`city`,`email`,`createtime`,`remark`) 
+       VALUES(#{userId},#{username},#{password},#{birthday},#{city},#{email},#{createtime},#{remark}) 
+   </insert>
+   
+   <update id="update" parameterType="User"> 
+       update  t_user t 
+      <set>
+      <if test="username!=null and username!='' " >
+        t.username=#{username}, 
+      </if>
+      <if test="password!=null and password!='' " >
+        t.password=#{password}, 
+      </if>
+      <if test="birthday!=null and birthday!='' " >
+        t.birthday=#{birthday}, 
+      </if>
+      <if test="city!=null and city!='' " >
+        t.city=#{city}, 
+      </if>
+      <if test="email!=null and email!='' " >
+        t.email=#{email}, 
+      </if>
+      <if test="createtime!=null and createtime!='' " >
+        t.createtime=#{createtime}, 
+      </if>
+      <if test="remark!=null and remark!='' " >
+        t.remark=#{remark}, 
+      </if>
+     </set>
+     where t.userId=#{userId} 
+   </update>
+   <select id="findById" parameterType="string" resultType="User"> 
+      SELECT  * FROM `t_user` t WHERE t.`userId`=#{_parameter} 
+    </select> 
+   <delete id="deleteById" parameterType="string">  
+      DELETE  FROM  t_user    WHERE userId=#{_parameter} 
+   </delete> 
+   
+   
+    <select id="findByUsernamePwd"  resultType="User"> 
+      SELECT  * FROM `t_user` t WHERE t.username=#{username} and t.password=#{password}
+    </select> 
+  
+    
+  
+</mapper> 

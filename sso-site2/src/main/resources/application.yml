@@ -1,0 +1,34 @@
+
+
+server:
+  port: 8002
+  context-path: /
+
+spring:
+  application:
+    name: sso-site2
+  #配置jsp视图     
+  mvc:
+    view:
+      prefix: /WEB-INF/pages
+      #suffix: .jsp
+  #redis 配置     
+  redis:
+    host: 192.168.9.130
+    port: 6384
+    password: ruihao
+    ssl: false
+    database: 6
+    timeout: 6000
+    pool:
+      max-active: 8 #缺省值8
+      max-idle: 8 #缺省值8
+      min-idle: 0 #缺省值0
+      max-wait: 3000 #缺省值-1
+      
+sso: 
+  ssoServer:
+    checkLoginUrl: http://www.mysso.com:9001/ssoUser_checkLogin
+    logoutUrl:  http://www.mysso.com:9001/ssoUser_logout
+  ssoClient:
+    logoutPage: /logout

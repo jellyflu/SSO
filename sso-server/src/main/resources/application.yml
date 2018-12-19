@@ -1,0 +1,39 @@
+
+server:
+  port: 9001
+  context-path: /
+  
+  
+spring:
+  application:
+    name: sso-server
+  #配置jsp视图     
+  mvc:
+    view:
+      prefix: /WEB-INF/pages
+      #suffix: .jsp
+      
+  #dev开发者工具
+  devtools: 
+    restart:
+      enabled: true
+      exclude: resources/**
+   #redis 配置
+  redis:
+    host: 192.168.9.130
+    port: 6384
+    password: ruihao
+    ssl: false
+    database: 6
+    timeout: 6000
+    pool:
+      max-active: 8 #缺省值8
+      max-idle: 8 #缺省值8
+      min-idle: 0 #缺省值0
+      max-wait: 3000 #缺省值-1
+    
+    
+    
+    
+ 
+ 

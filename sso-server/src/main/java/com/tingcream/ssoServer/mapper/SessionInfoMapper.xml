@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.tingcream.ssoServer.mapper.SessionInfoMapper" > 
+  
+  
+   <insert id="save" parameterType="SessionInfo"> 
+       INSERT INTO t_sessioninfo(`sessionId`,`sessionType`,`parentSessionId`,`domain`,`browserIp`,`browserName`,`loginTime`,`logoutTime`,`isOnline`,`userId`,`username`) 
+       VALUES(#{sessionId},#{sessionType},#{parentSessionId},#{domain},#{browserIp},#{browserName},#{loginTime},#{logoutTime},#{isOnline},#{userId},#{username}) 
+   </insert>
+  
+   <update id="update" parameterType="SessionInfo"> 
+       update  t_sessioninfo t 
+      <set>
+      <if test="sessionType!=null " >
+        t.sessionType=#{sessionType}, 
+      </if>
+      <if test="parentSessionId!=null and parentSessionId!='' " >
+        t.parentSessionId=#{parentSessionId}, 
+      </if>
+      <if test="domain!=null and domain!='' " >
+        t.domain=#{domain}, 
+      </if>
+      <if test="browserIp!=null and browserIp!='' " >
+        t.browserIp=#{browserIp}, 
+      </if>
+      <if test="browserName!=null and browserName!='' " >
+        t.browserName=#{browserName}, 
+      </if>
+      <if test="loginTime!=null and loginTime!='' " >
+        t.loginTime=#{loginTime}, 
+      </if>
+      <if test="logoutTime!=null and logoutTime!='' " >
+        t.logoutTime=#{logoutTime}, 
+      </if>
+      <if test="isOnline!=null " >
+        t.isOnline=#{isOnline}, 
+      </if>
+      <if test="userId!=null and userId!='' " >
+        t.userId=#{userId}, 
+      </if>
+      <if test="username!=null and username!='' " >
+        t.username=#{username}, 
+      </if>
+     </set>
+     where t.sessionId=#{sessionId} 
+   </update>
+   <select id="findById" parameterType="string" resultType="SessionInfo"> 
+      SELECT  * FROM `t_sessioninfo` t WHERE t.`sessionId`=#{_parameter} 
+    </select> 
+   <delete id="deleteById" parameterType="string">  
+      DELETE  FROM  t_sessioninfo    WHERE sessionId=#{_parameter} 
+   </delete> 
+
+   <!-- 判断指定session是否还在线  -->
+   <select id="findSessionInfoById" parameterType="string" resultType="SessionInfo"> 
+      SELECT  * FROM `t_sessioninfo` t WHERE t.`sessionId`=#{_parameter} and t.isOnline=1
+    </select> 
+    <!-- 根据全局的SSO id查询子id(在线) -->
+    <select id="findOnlineChildrenByParendId" parameterType="string" resultType="SessionInfo"> 
+      SELECT  * FROM `t_sessioninfo` t WHERE  t.`parentSessionId`=#{_parameter} 
+      and t.isOnline=1 
+    </select> 
+    
+    <!-- 根据全局的SSO id查询子id -->
+    <select id="findChildrenByParendId" parameterType="string" resultType="SessionInfo"> 
+      SELECT  * FROM `t_sessioninfo` t WHERE  t.`parentSessionId`=#{_parameter} 
+    </select> 
+    <!-- SSO用户退出 -->
+    <update id="setLogout">
+      UPDATE   t_sessioninfo  t SET t.`logoutTime`=NOW(),t.`isOnline`=0
+	 WHERE t.`sessionId` IN
+	  <foreach collection="array" index="index" item="id" open="("  
+  		  close=")" separator=",">  
+  		 #{id}   
+  	 </foreach>   
+    </update>
+    
+     <!-- 分页查询 list -->
+     <select id="findSessionInfoListPage" parameterType="map" resultType="SessionInfo">
+  		 SELECT * FROM `t_sessioninfo` a                                          
+  		     <where>   
+                <if test="browserIp!=null and browserIp!=''">
+                   and  a.browserIp  like  concat('%',#{browserIp},'%')
+                </if>
+                <if test="isOnline!=null">
+                   and  a.isOnline = #{isOnline}
+                </if>
+                <if test="begintime!=null and begintime!=''">
+                  <![CDATA[
+                    and a.loginTime  >=  #{begintime}
+                   ]]>
+                </if>  
+                <if test="endtime!=null and endtime!=''">
+                   <![CDATA[
+                    and a.loginTime  <=  #{endtime}
+                   ]]>
+                </if> 
+  		         and    a.sessionType=1                                               
+  		     </where>                                                             
+  		     <if test="sortName!=null and sortName!='' and sortOrder!=null and sortOrder!='' " >                   
+  		           ORDER BY ${sortName} ${sortOrder}                              
+  		     </if>        
+  		  LIMIT  #{startNum},#{pageSize}                                       
+  	  </select>   
+  	  
+  	  <!-- 分页查询count -->                                                                
+  	 <select id="findSessionInfoCountPage" parameterType="map" resultType="int">     
+  		 SELECT count(1) FROM `t_sessioninfo` a                                    
+  		        <where>   
+	  		         <if test="browserIp!=null and browserIp!=''">
+	                   and  a.browserIp  like  concat('%',#{browserIp},'%')
+	                </if>
+	                <if test="isOnline!=null">
+	                   and  a.isOnline = #{isOnline}
+	                </if>
+	                <if test="begintime!=null and begintime!=''">
+	                  <![CDATA[
+	                    and a.loginTime  >=  #{begintime}
+	                   ]]>
+	                </if>  
+	                <if test="endtime!=null and endtime!=''">
+	                   <![CDATA[
+	                    and a.loginTime  <=  #{endtime}
+	                   ]]>
+	                </if> 
+  		            and   a.sessionType=1 
+  		        </where>     
+  	   </select> 
+    
+    
+    
+    
+ 
+ 
+</mapper> 
