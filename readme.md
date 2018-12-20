@@ -31,11 +31,9 @@ java实现的SSO案例(springboot)，有SSO后台管理界面，SSO全局、局�
 
 配置本机hosts文件，以方便测试SSO登录
 
-127.0.0.1  www.site1.com
-127.0.0.1  www.site2.com
-127.0.0.1  www.mysso.com
-
-
+127.0.0.1  www.site1.com  
+127.0.0.1  www.site2.com  
+127.0.0.1  www.mysso.com  
 
 # 运行截图
 
