@@ -21,10 +21,10 @@ spring:
    #redis 配置
   redis:
     host: 192.168.9.130
-    port: 6384
+    port: 6379
     password: 123456
     ssl: false
-    database: 6
+    database: 0
     timeout: 6000
     pool:
       max-active: 8 #缺省值8
