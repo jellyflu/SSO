@@ -1,5 +1,7 @@
 package com.tingcream.ssoSite2;
 
+import java.io.Serializable;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -55,7 +57,7 @@ public class SsoSite2Application extends SpringBootServletInitializer {
     
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Bean 
-	public  RedisTemplate<Object,Object>  redisTemplate( 
+	public  RedisTemplate<Serializable,Object>  redisTemplate( 
 			 JedisConnectionFactory  connectionFactory,
 			 StringRedisSerializer stringRedisSerializer,
 			 GenericJackson2JsonRedisSerializer  genericJackson2JsonRedisSerializer ) {
@@ -68,7 +70,7 @@ public class SsoSite2Application extends SpringBootServletInitializer {
 		return    redisTemplate;
 	}
     @Bean
-    public  RedisHelper  redisHelper( /*@Autowired*/ RedisTemplate<Object,Object>  redisTemplate) {
+    public  RedisHelper  redisHelper( /*@Autowired*/ RedisTemplate<Serializable,Object>  redisTemplate) {
     	RedisHelper redisHelper = new  RedisHelper();
     	redisHelper.setRedisTemplate(redisTemplate);
     	return redisHelper;

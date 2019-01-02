@@ -1,6 +1,8 @@
 package com.tingcream.ssoServer;
 
  
+import java.io.Serializable;
+
 import javax.sql.DataSource;
 
 import org.apache.ibatis.io.VFS;
@@ -101,7 +103,7 @@ public class SsoServerApplication  extends SpringBootServletInitializer {
     
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Bean 
-	public  RedisTemplate<Object,Object>  redisTemplate( 
+	public  RedisTemplate<Serializable,Object>  redisTemplate( 
 			 JedisConnectionFactory  connectionFactory,
 			 StringRedisSerializer stringRedisSerializer,
 			 GenericJackson2JsonRedisSerializer  genericJackson2JsonRedisSerializer ) {
@@ -120,7 +122,7 @@ public class SsoServerApplication  extends SpringBootServletInitializer {
 	 *  @Autowired RedisTemplate<Object,Object>  redisTemplate ,方法参数前面的@Autowired 可以省略掉。
 	 */
     @Bean
-    public  RedisHelper  redisHelper( /*@Autowired*/ RedisTemplate<Object,Object>  redisTemplate) {
+    public  RedisHelper  redisHelper( /*@Autowired*/RedisTemplate<Serializable,Object> redisTemplate) {
     	RedisHelper redisHelper = new  RedisHelper();
     	redisHelper.setRedisTemplate(redisTemplate);
     	return redisHelper;

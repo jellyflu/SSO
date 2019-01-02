@@ -1,5 +1,6 @@
 package com.tingcream.ssoBase.common;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -38,11 +39,11 @@ public class RedisHelper {
 	 public static  String SESSION_INFOS="sessionInfos"; 
 	 
 	 
-	  private RedisTemplate<Object, Object> redisTemplate; 
-	  public void setRedisTemplate(  RedisTemplate<Object, Object> redisTemplate) { 
+	  private RedisTemplate<Serializable, Object> redisTemplate; 
+	  public void setRedisTemplate(  RedisTemplate<Serializable, Object> redisTemplate) { 
 	    this.redisTemplate = redisTemplate; 
 	  } 
-	  public RedisTemplate<Object, Object> getRedisTemplate() {
+	  public RedisTemplate<Serializable, Object> getRedisTemplate() {
 		return redisTemplate;
 	  }
 	  
@@ -59,7 +60,7 @@ public class RedisHelper {
 	   * @param value
 	   */
 	  public  void     hset(String key ,String field,Object value){
-		    BoundHashOperations<Object, String, Object> hashOperation=  redisTemplate.boundHashOps(key);
+		    BoundHashOperations<Serializable, String, Object> hashOperation=  redisTemplate.boundHashOps(key);
 		    hashOperation.put(field, value);
 	  }    
 	  /**
@@ -72,7 +73,7 @@ public class RedisHelper {
 	   * @param ttl
 	   */
 	  public   void   hset(String key ,String field,Object value,long ttl){
-		    BoundHashOperations<Object, String, Object> hashOperation=  redisTemplate.boundHashOps(key);
+		    BoundHashOperations<Serializable, String, Object> hashOperation=  redisTemplate.boundHashOps(key);
 		    hashOperation.put(field, value);
 		    redisTemplate.expire(key, ttl, TimeUnit.SECONDS);
 	  }
@@ -88,7 +89,7 @@ public class RedisHelper {
 	   * @return
 	   */
 	  public  Object   hget(String key,String field){
-		  BoundHashOperations<Object, String, Object> hashOperation=  redisTemplate.boundHashOps(key);
+		  BoundHashOperations<Serializable, String, Object> hashOperation=  redisTemplate.boundHashOps(key);
 		  return   hashOperation.get(field);
 	  }
 	  /**
@@ -99,7 +100,7 @@ public class RedisHelper {
 	   * @param field
 	   */
 	  public  void hdel(String key,Object field){
-		  BoundHashOperations<Object, String, Object> hashOperation=  redisTemplate.boundHashOps(key);
+		  BoundHashOperations<Serializable, String, Object> hashOperation=  redisTemplate.boundHashOps(key);
 		   hashOperation.delete(field);
 	  }
 	  /**
@@ -110,7 +111,7 @@ public class RedisHelper {
 	   * @param fields
 	   */
 	  public  void hdel(final String key,final Object... fields){
-		  BoundHashOperations<Object, String, Object> hashOperation=  redisTemplate.boundHashOps(key);
+		  BoundHashOperations<Serializable, String, Object> hashOperation=  redisTemplate.boundHashOps(key);
 		  hashOperation.delete(fields);
 	  }
 	  
@@ -124,7 +125,7 @@ public class RedisHelper {
 	   * @return
 	   */
 	  public  Long    hlen(String key){
-		  BoundHashOperations<Object, String, Object> hashOperation=  redisTemplate.boundHashOps(key);
+		  BoundHashOperations<Serializable, String, Object> hashOperation=  redisTemplate.boundHashOps(key);
 		 return  hashOperation.size();
 	  }
 	  /**
@@ -135,7 +136,7 @@ public class RedisHelper {
 	   * @return
 	   */
 	  public  Set<String> hkeys(String key){
-		  BoundHashOperations<Object, String, Object> hashOperation=  redisTemplate.boundHashOps(key);
+		  BoundHashOperations<Serializable, String, Object> hashOperation=  redisTemplate.boundHashOps(key);
 		 return  hashOperation.keys();
 	  }
 	  /**
@@ -146,7 +147,7 @@ public class RedisHelper {
 	   * @return
 	   */
 	  public   List<Object> hvals(String key){
-		    BoundHashOperations<Object, String, Object> hashOperation=  redisTemplate.boundHashOps(key);
+		    BoundHashOperations<Serializable, String, Object> hashOperation=  redisTemplate.boundHashOps(key);
 			 return  hashOperation.values();
 	  }
 	  /**
@@ -157,7 +158,7 @@ public class RedisHelper {
 	   * @return
 	   */
 	  public   Map<String,Object> hgetall(String key){
-		  BoundHashOperations<Object, String, Object> hashOperation=  redisTemplate.boundHashOps(key);
+		  BoundHashOperations<Serializable, String, Object> hashOperation=  redisTemplate.boundHashOps(key);
 			 return  hashOperation.entries();
 	  }
 	  
@@ -184,7 +185,7 @@ public class RedisHelper {
 	   * @date 2018年10月10日 下午5:05:11
 	   */
 	  public void removePattern(final String pattern) { 
-	    Set<Object> keys = redisTemplate.keys(pattern); 
+	    Set<Serializable> keys = redisTemplate.keys(pattern); 
 	    if (keys.size() > 0) {
 	    	redisTemplate.delete(keys);
 	    }
@@ -218,7 +219,7 @@ public class RedisHelper {
 	   */
 	  public Object get(final String key) { 
 	    Object result = null; 
-	    ValueOperations<Object, Object> operations = redisTemplate .opsForValue(); 
+	    ValueOperations<Serializable, Object> operations = redisTemplate .opsForValue(); 
 	    result = operations.get(key); 
 	    return result; 
 	  } 
@@ -232,7 +233,7 @@ public class RedisHelper {
 	   */
 	  public void set(final String key, Object value) { 
 	    try { 
-	      ValueOperations<Object, Object> operations = redisTemplate .opsForValue(); 
+	      ValueOperations<Serializable, Object> operations = redisTemplate .opsForValue(); 
 	      operations.set(key, value); 
 	    } catch (Exception e) { 
 	    	logger.error(ExceptionUtils.getStackTrace(e));
@@ -249,7 +250,7 @@ public class RedisHelper {
 	   * @param ttl
 	   */
 	  public void set(final String key, Object value, Long ttl) { 
-	      ValueOperations<Object, Object> operations = redisTemplate.opsForValue(); 
+	      ValueOperations<Serializable, Object> operations = redisTemplate.opsForValue(); 
 	      operations.set(key, value, ttl, TimeUnit.SECONDS) ;
 	      redisTemplate.expire(key, ttl, TimeUnit.SECONDS);//
 	  } 
