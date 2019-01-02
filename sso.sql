@@ -37,7 +37,9 @@ CREATE TABLE `t_sessioninfo` (
   CONSTRAINT `t_sessioninfo_ibfk_1` FOREIGN KEY (`parentSessionId`) REFERENCES `t_sessioninfo` (`sessionId`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
- 
+/*Data for the table `t_sessioninfo` */
+
+
 /*Table structure for table `t_user` */
 
 DROP TABLE IF EXISTS `t_user`;
@@ -54,9 +56,13 @@ CREATE TABLE `t_user` (
   PRIMARY KEY (`userId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
- 
+/*Data for the table `t_user` */
 
- 
+insert  into `t_user`(`userId`,`username`,`password`,`birthday`,`city`,`email`,`createtime`,`remark`) values 
+('9F6111DDFDE311E8A35C507B9D60CD8C','zhangsan','9ae0147d65724f72f74804af4aac6f13','1993-03-23','北京','zhangsan@123.com','2018-12-12 15:57:48',''),
+('C9D74719FDE311E8A35C507B9D60CD8C','wangwu','9ae0147d65724f72f74804af4aac6f13','1993-05-23','广州','wangwu@123.com','2018-12-12 15:58:59',''),
+('D162BA4BFDE311E8A35C507B9D60CD8C','lisi','9ae0147d65724f72f74804af4aac6f13','1993-04-23','南京','lisi@123.com','2018-12-12 15:59:12','');
+
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
