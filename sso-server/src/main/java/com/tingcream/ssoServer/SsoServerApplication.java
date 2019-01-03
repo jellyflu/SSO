@@ -11,10 +11,11 @@ import org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration;
 import org.mybatis.spring.boot.autoconfigure.SpringBootVFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.aop.AopAutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.JdbcTemplateAutoConfiguration;
@@ -32,7 +33,11 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import com.tingcream.ssoBase.common.RedisHelper;
+import com.tingcream.ssoClient.common.SpringContextAware;
+import com.tingcream.ssoClient.configuration.EnableSsoAutoConfig;
+import com.tingcream.ssoClient.configuration.RedisHelper;
+import com.tingcream.ssoClient.configuration.SessionInfoHelper;
+import com.tingcream.ssoClient.properties.SsoProperties;
  
 @SpringBootApplication(exclude= {
 		DataSourceAutoConfiguration.class,
@@ -40,7 +45,6 @@ import com.tingcream.ssoBase.common.RedisHelper;
 		JdbcTemplateAutoConfiguration.class,
 		AopAutoConfiguration.class,
 		MybatisAutoConfiguration.class,
-		
 	},scanBasePackages= {"com.tingcream.ssoServer"})
 
 
@@ -49,6 +53,7 @@ import com.tingcream.ssoBase.common.RedisHelper;
 @PropertySource({"classpath:/jdbc.properties"})
 //@Import({RedisAutoConfiguration.class}) //springboot中默认已引入了RedisAutoConfiguration这个自动化配置 ,
 @EnableAspectJAutoProxy(exposeProxy=true,proxyTargetClass=true) 
+//@EnableSsoAutoConfig
 public class SsoServerApplication  extends SpringBootServletInitializer {
 	
 	
@@ -57,21 +62,13 @@ public class SsoServerApplication  extends SpringBootServletInitializer {
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		
-		 
 		return application.sources(SsoServerApplication.class);
 	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(SsoServerApplication.class, args);
 	}
-	
 	 
-	
- 
-	
- 
-	
     @Bean
     public SqlSessionFactoryBean sqlSessionFactoryBean(DataSource dataSource) {
     	
@@ -91,22 +88,26 @@ public class SsoServerApplication  extends SpringBootServletInitializer {
     }
     
     
-    
+
     @Bean
+    @ConditionalOnMissingBean(StringRedisSerializer.class)
 	public  StringRedisSerializer   stringRedisSerializer() {
 		return new  StringRedisSerializer();
 	}
+    
 	@Bean  
+	@ConditionalOnMissingBean(GenericJackson2JsonRedisSerializer.class)
 	public  GenericJackson2JsonRedisSerializer genericJackson2JsonRedisSerializer() {
 		return new   GenericJackson2JsonRedisSerializer();
 	}
     
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Bean 
+	@Bean
 	public  RedisTemplate<Serializable,Object>  redisTemplate( 
 			 JedisConnectionFactory  connectionFactory,
 			 StringRedisSerializer stringRedisSerializer,
 			 GenericJackson2JsonRedisSerializer  genericJackson2JsonRedisSerializer ) {
+		
 		RedisTemplate  redisTemplate=new RedisTemplate();
 		redisTemplate.setConnectionFactory(connectionFactory);
 		redisTemplate.setKeySerializer(stringRedisSerializer);
@@ -116,19 +117,21 @@ public class SsoServerApplication  extends SpringBootServletInitializer {
 		return    redisTemplate;
 	}
 	
-	/**
-	 *  当springboot容器创建 @bean 时，发现方法中需要传入一个RedisTemplate<Object,Object> 类型的参数 redisTemplate,
-	 *  那么springboot会自动从容器中 找到容器中已存在的redisTemplate bean，并传入方法中。 
-	 *  @Autowired RedisTemplate<Object,Object>  redisTemplate ,方法参数前面的@Autowired 可以省略掉。
-	 */
     @Bean
-    public  RedisHelper  redisHelper( /*@Autowired*/RedisTemplate<Serializable,Object> redisTemplate) {
+    public  RedisHelper  redisHelper( RedisTemplate<Serializable,Object> redisTemplate) {
     	RedisHelper redisHelper = new  RedisHelper();
     	redisHelper.setRedisTemplate(redisTemplate);
     	return redisHelper;
     }
     
-
+    @Bean
+    public  SessionInfoHelper  sessionInfoHelper(RedisHelper  redisHelper) {
+    	SessionInfoHelper  sessionInfoHelper=new SessionInfoHelper();
+    	sessionInfoHelper.setRedisHelper(redisHelper);
+    	return  sessionInfoHelper;
+    }
+    
+ 
     
 	
 }

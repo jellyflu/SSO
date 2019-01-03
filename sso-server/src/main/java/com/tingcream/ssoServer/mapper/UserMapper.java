@@ -2,7 +2,7 @@ package com.tingcream.ssoServer.mapper;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.tingcream.ssoBase.model.User;
+import com.tingcream.ssoClient.model.User;
 
 public interface UserMapper {
         

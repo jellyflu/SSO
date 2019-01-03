@@ -5,7 +5,7 @@ package com.tingcream.ssoServer.mapper;
 import java.util.List;
 import java.util.Map;
 
-import com.tingcream.ssoBase.model.SessionInfo;
+import com.tingcream.ssoClient.model.SessionInfo;
 
 public interface SessionInfoMapper {
         
@@ -17,7 +17,7 @@ public interface SessionInfoMapper {
     //根据id查询
     public  SessionInfo findSessionInfoById(String id);       
     public List<SessionInfo> findOnlineChildrenByParendId(String sessionId);
-	public int setLogout(Object[] sessionIds);
+	public int setLogout(String[] sessionIds);
 	
 	
 	public List<SessionInfo> findChildrenByParendId(String sessionId);

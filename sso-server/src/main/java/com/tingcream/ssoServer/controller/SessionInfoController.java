@@ -11,7 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.tingcream.ssoBase.model.SessionInfo;
+import com.tingcream.ssoClient.model.SessionInfo;
 import com.tingcream.ssoServer.common.Page;
 import com.tingcream.ssoServer.service.SessionInfoService;
 import com.tingcream.ssoServer.service.SsoLoginService;

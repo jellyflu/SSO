@@ -22,8 +22,8 @@
 	<dependencies>
 	    <dependency>
 	      <groupId>com.tingcream</groupId>
-	      <artifactId>sso-base</artifactId>
-	      <version>0.0.1-SNAPSHOT</version>
+	      <artifactId>sso-starter-client</artifactId>
+	      <version>1.0</version>
 	    </dependency>
 	
 		<dependency>
@@ -181,28 +181,7 @@
 		    <artifactId>aspectjrt</artifactId>
 		    <version>1.5.4</version>
 		</dependency>
-		 
- 
- 
-		 
-		<!--  
-		 redis 连接池 jar包
-		<dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-redis</artifactId>
-			<version>1.6.1.RELEASE</version>
-		</dependency>
-		
-		redis 客户端依赖 jar包
-		<dependency>
-			<groupId>redis.clients</groupId>
-			<artifactId>jedis</artifactId>
-			<version>2.7.3</version>
-		</dependency>
-		Redis end
-		 
-  -->
-
+		  
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>

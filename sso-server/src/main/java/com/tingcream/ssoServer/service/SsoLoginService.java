@@ -3,17 +3,17 @@ package com.tingcream.ssoServer.service;
 import java.util.Date;
 import java.util.List;
 
- 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.tingcream.ssoBase.common.RedisHelper;
-import com.tingcream.ssoBase.model.SessionInfo;
-import com.tingcream.ssoBase.model.User;
-import com.tingcream.ssoBase.util.EncryptionUtil;
-import com.tingcream.ssoBase.util.TLDateFormatUtil;
+import com.tingcream.ssoClient.configuration.RedisHelper;
+import com.tingcream.ssoClient.configuration.SessionInfoHelper;
+import com.tingcream.ssoClient.model.SessionInfo;
+import com.tingcream.ssoClient.model.User;
 import com.tingcream.ssoServer.mapper.SessionInfoMapper;
 import com.tingcream.ssoServer.mapper.UserMapper;
+import com.tingcream.ssoServer.util.EncryptionUtil;
+import com.tingcream.ssoServer.util.TLDateFormatUtil;
  
 
 @Service
@@ -26,10 +26,10 @@ public class SsoLoginService {
 	
 	
 	@Autowired
-	private RedisHelper redisHelper ;
+	private UserMapper userMapper;
 	
 	@Autowired
-	private UserMapper userMapper;
+	private  SessionInfoHelper sessionInfoHelper ;
 	
 	
 	
@@ -45,7 +45,7 @@ public class SsoLoginService {
 	public  int  checkLogin(String domain,String siteSessionId,String ssoSessionId, String browserIp, String browserName) {
 		
  
-		 SessionInfo  globalSessionInfo  = (SessionInfo) redisHelper.hget(RedisHelper.SESSION_INFOS, ssoSessionId);//从缓存中获取全局sessionInfo信息
+		 SessionInfo  globalSessionInfo= sessionInfoHelper.getSessionInfo(ssoSessionId);
 		 
 	     if(globalSessionInfo!=null) {//用户浏览器已经全局登录
 	    	 
@@ -66,8 +66,9 @@ public class SsoLoginService {
 	    	  siteSessionInfo.setUsername(user.getUsername());
 	    	  siteSessionInfo.setUser(user);
 	    	  
+	    	  //局部会话写入redis中
+	    	  sessionInfoHelper.saveSessionInfo(siteSessionId, siteSessionInfo);
 	    	  
-	    	  redisHelper.hset(RedisHelper.SESSION_INFOS, siteSessionId, siteSessionInfo);//局部会话写入redis中
 	    	  sessionInfoMapper.save(siteSessionInfo);//局部会话写入表中
 	    	 
 	    	 return 1;// 需要重定向到returnUrl
@@ -141,9 +142,11 @@ public class SsoLoginService {
 		  siteSessionInfo.setUser(user);
 		  
 		  
+		   
+		  sessionInfoHelper.saveSessionInfo(ssoSessionId, globalSessionInfo);//全局会话写入redis中
+		  sessionInfoHelper.saveSessionInfo(siteSessionId, siteSessionInfo);//局部会话写入redis中
 		  
-		  redisHelper.hset(RedisHelper.SESSION_INFOS, ssoSessionId, globalSessionInfo);//全局会话写入redis中
-    	  redisHelper.hset(RedisHelper.SESSION_INFOS, siteSessionId, siteSessionInfo);//局部会话写入redis中
+		  
 		  sessionInfoMapper.save(globalSessionInfo);//全局会话写入表中
 		  sessionInfoMapper.save(siteSessionInfo);//局部会话写入表中
     	  
@@ -158,13 +161,13 @@ public class SsoLoginService {
 		 List<SessionInfo> sessionList = sessionInfoMapper.findOnlineChildrenByParendId(ssoSessionId);
 		 if(sessionList!=null && sessionList.size()>0) {
 			  int len=sessionList.size()+1;
-			  Object[] keys=new Object[len];
+			  String[] keys=new String[len];
 			  for(int i=0;i<sessionList.size();i++) {
 				  keys[i]=sessionList.get(i).getSessionId();
 			  }
 			  keys[len-1]=ssoSessionId;
 			 
-			 redisHelper.hdel(RedisHelper.SESSION_INFOS, keys);//redis中 清除
+			 sessionInfoHelper.clearSessionInfos(keys);
 		     sessionInfoMapper.setLogout(keys); //数据库中 设置下线
 			 
 		 }

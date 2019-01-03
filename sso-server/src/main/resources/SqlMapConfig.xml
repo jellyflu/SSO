@@ -10,7 +10,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
     </settings>
 	 <typeAliases>
        <package name="com.tingcream.ssoServer.model"/>
-       <package name="com.tingcream.ssoBase.model"/>
+       <package name="com.tingcream.ssoClient.model"/>
 	    
 	 
 	 </typeAliases>

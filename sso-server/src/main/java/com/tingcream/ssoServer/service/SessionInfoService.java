@@ -7,8 +7,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.tingcream.ssoBase.model.SessionInfo;
-import com.tingcream.ssoBase.model.User;
+import com.tingcream.ssoClient.model.SessionInfo;
+import com.tingcream.ssoClient.model.User;
 import com.tingcream.ssoServer.common.Page;
 import com.tingcream.ssoServer.mapper.SessionInfoMapper;
 import com.tingcream.ssoServer.mapper.UserMapper;

@@ -22,8 +22,8 @@
 	<dependencies>
 	     <dependency>
 	      <groupId>com.tingcream</groupId>
-	      <artifactId>sso-base</artifactId>
-	      <version>0.0.1-SNAPSHOT</version>
+	      <artifactId>sso-starter-client</artifactId>
+	      <version>1.0</version>
 	     </dependency>
 	   
 		<dependency>

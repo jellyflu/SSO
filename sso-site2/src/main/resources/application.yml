@@ -14,7 +14,7 @@ spring:
       #suffix: .jsp
   #redis 配置     
   redis:
-    host: 192.168.9.130
+    host: 192.168.100.220
     port: 6379
     password: 123456
     ssl: false
@@ -28,7 +28,12 @@ spring:
       
 sso: 
   ssoServer:
+    #sso-server 登录验证地址
     checkLoginUrl: http://www.mysso.com:9001/ssoUser_checkLogin
+    #sso-server 退出地址
     logoutUrl:  http://www.mysso.com:9001/ssoUser_logout
   ssoClient:
+    #客户端退出回调页面
     logoutPage: /logout
+    
+    
