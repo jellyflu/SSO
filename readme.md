@@ -29,12 +29,13 @@ java实现的SSO案例(springboot)，有SSO后台管理界面，SSO全局、局�
 
 ## sso-site1
 
- SSO客户端工程(站点1,http://www.site1.com:8001)，引入sso-starter-client 包
+ SSO客户端工程(站点1,http://www.site1.com:8001) 
+ 引入sso-starter-client 包
 
 ## sso-site2
 
- SSO客户端工程(站点2,http://www.site2.com:8002)，引入sso-starter-client 包
-
+ SSO客户端工程(站点2,http://www.site2.com:8002)
+ 引入sso-starter-client 包
 
 
 # 环境准备
