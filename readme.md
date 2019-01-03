@@ -5,9 +5,19 @@ java实现的SSO案例(springboot)，有SSO后台管理界面，SSO全局、局�
 
 # 工程介绍
 
-##  sso-base  
+##  sso-client  
 
- SSO项目基础工程，封装了一些sso-server、sso-client都需要的模型类、工具类、redis辅助bean等
+ sso-client是一个springboot的插件(starter),它封装了SSO登录拦截器、SSO客户端退出Controller、Session会话管理器等。在站点的pom.xml中需要引入这个插件 ：
+
+```java
+<dependency>
+   <groupId>com.tingcream</groupId>
+   <artifactId>sso-starter-client</artifactId>
+    <version>1.0</version>
+</dependency>
+```
+
+
 
 ## sso-server:
 
@@ -19,11 +29,11 @@ java实现的SSO案例(springboot)，有SSO后台管理界面，SSO全局、局�
 
 ## sso-site1
 
- SSO客户端工程(站点1,http://www.site1.com:8001)
+ SSO客户端工程(站点1,http://www.site1.com:8001)，引入sso-starter-client 包
 
 ## sso-site2
 
- SSO客户端工程(站点2,http://www.site2.com:8002)
+ SSO客户端工程(站点2,http://www.site2.com:8002)，引入sso-starter-client 包
 
 
 
@@ -62,6 +72,3 @@ site2 订单页面1:
 site2 订单页面2:
 ![Image text](https://raw.githubusercontent.com/jellyflu/pub_resouces/master/SSO/4.png) 
 
-#  其他说明
-
-sso-client :  sso的客户端插件，有空再整理下，单独抽取出来封装成jar(springboot的starter)。当某站点想要接入SSO单点登录系统时，只需要引入这个客户端插件jar包，并进行相应配置即可。
