@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 public class SsoLoginHelper {
 
 	/**
-	 * 从returnUrl中截取出site域  ，如 <br/>
+	 *  从returnUrl中截取出site域  ，如 <br/>
 	 *  http://www.site1.com:8001/aa/bb 截取出 www.site1.com  <br/>
 	 *  https://www.site2.com/aa/cc 截取出 www.site2.com  <br/>
 	 * @param returnUrl 
@@ -22,6 +22,4 @@ public class SsoLoginHelper {
 		 String[] ss= str.split("/");
 		 return ss[0].split(":")[0];
 	}
-	
- 
 }

@@ -11,7 +11,6 @@ import org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration;
 import org.mybatis.spring.boot.autoconfigure.SpringBootVFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.aop.AopAutoConfiguration;
@@ -32,12 +31,8 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-
-import com.tingcream.ssoClient.common.SpringContextAware;
-import com.tingcream.ssoClient.configuration.EnableSsoAutoConfig;
 import com.tingcream.ssoClient.configuration.RedisHelper;
 import com.tingcream.ssoClient.configuration.SessionInfoHelper;
-import com.tingcream.ssoClient.properties.SsoProperties;
  
 @SpringBootApplication(exclude= {
 		DataSourceAutoConfiguration.class,
@@ -53,7 +48,6 @@ import com.tingcream.ssoClient.properties.SsoProperties;
 @PropertySource({"classpath:/jdbc.properties"})
 //@Import({RedisAutoConfiguration.class}) //springboot中默认已引入了RedisAutoConfiguration这个自动化配置 ,
 @EnableAspectJAutoProxy(exposeProxy=true,proxyTargetClass=true) 
-//@EnableSsoAutoConfig
 public class SsoServerApplication  extends SpringBootServletInitializer {
 	
 	

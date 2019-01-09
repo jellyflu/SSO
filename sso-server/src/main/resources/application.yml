@@ -2,6 +2,9 @@
 server:
   port: 9001
   context-path: /
+  session:
+    cookie:
+      http-only: true
   
   
 spring:

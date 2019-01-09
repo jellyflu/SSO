@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.tingcream.ssoClient.configuration.SessionInfoHelper;
@@ -27,7 +28,7 @@ public class SsoLoginController {
   	@Autowired
   	private  SessionInfoHelper  sessionInfoHelper;
 	
-	// test
+// test
 //  	@RequestMapping("/ssoUser_toLogin")
 //  	public String  ssoUser_toLogin(HttpServletRequest request,HttpServletResponse response) {
 //  		request.setAttribute("errorMsg", "用户名或密码错误");
@@ -38,48 +39,42 @@ public class SsoLoginController {
 	 * sso检测用户登录 (此时用户浏览器在局部上未登录，但全局上可能已经登录了)
 	 *   http://www.mysso.com:9001/ssoUser_checkLogin?returnUrl=http://www.site1.com:8001/order_info1&siteSessionId=xxxx
 	 * @param returnUrl
-	 * @param siteSessionId
+	 * @param _0x1d2f siteSessionId
 	 * @return
 	 */
+  	@CrossOrigin()//支持ajax跨域
 	@RequestMapping("/ssoUser_checkLogin")
-	public String ssoUser_checkLogin(HttpServletRequest request,HttpServletResponse response,
-			String returnUrl,String siteSessionId) {
-         
-		String ssoSessionId=request.getSession().getId();//sso全局sessionId
+	public String ssoUser_checkLogin(HttpServletRequest request,HttpServletResponse response
+			,String returnUrl,String _0x1d2f
+			) {
+  		String siteSessionId=_0x1d2f;
+		String  ssoSessionId=request.getSession().getId();//sso全局sessionId
 		String  browserName= NetworkUtils.getBrowserName(request);//浏览器名称
 		String  browserIp= NetworkUtils.getBrowserIp(request);//浏览器ip
-		 
-		 String domain =ssoLoginHelper.getDomainFormReturnUrl(returnUrl);
-		  
-		
+		String domain =ssoLoginHelper.getDomainFormReturnUrl(returnUrl);
 		int  result =ssoLoginService.checkLogin(domain, siteSessionId, ssoSessionId,browserIp,browserName);
 		if(result==1) {
 			//1 需要重定向到returnUrl
-			
 			 return "redirect:"+returnUrl;//浏览器重定向
 			
 		}else {
 			//2 需要内部转发到用户登录页
-			request.setAttribute("siteSessionId", siteSessionId);// 
+			request.setAttribute("_0x1d2f", siteSessionId);// 
 		  	request.setAttribute("returnUrl", returnUrl);//
-			// xxxx
-			//request.getSession().setAttribute("siteSessionId", siteSessionId);
-			//request.getSession().setAttribute("returnUrl", returnUrl);
-			
-			
 			return "/ssoUser_login.jsp";
-			
 		}
 	}
     /**
      * sso用户提交数据登录   (此时用户浏览器在局部上未登录，全局也未登录)
      * @param username  用户名
      * @param password  密码
+     * @param  _0x1d2f  siteSessionId
+     * @param  returnUrl
      * @return
      */
 	@RequestMapping("/ssoUser_login")
 	public String ssoUser_login(HttpServletRequest request,HttpServletResponse response,
-			String username,String password,String  siteSessionId,String returnUrl) {
+			String username,String password,String  _0x1d2f,String returnUrl) {
 		 if(StringUtils.isBlank(username)) {
 			 request.setAttribute("errorMsg", "用户名不能为空!");
 			 return "/ssoUser_login.jsp";
@@ -89,6 +84,8 @@ public class SsoLoginController {
 			 return "/ssoUser_login.jsp";
 		 }  
 		 
+		 
+		 String  siteSessionId=_0x1d2f;
 		 String ssoSessionId=request.getSession().getId();//sso全局sessionId
 		 String  browserName= NetworkUtils.getBrowserName(request);//浏览器名称
 		 String  browserIp= NetworkUtils.getBrowserIp(request);//浏览器ip
@@ -97,7 +94,7 @@ public class SsoLoginController {
 		 
 		  User user= ssoLoginService.checkUsernamePwd(username, password);
 		  if(user==null) {
-			  request.setAttribute("siteSessionId", siteSessionId);
+			  request.setAttribute("_0x1d2f", siteSessionId);
 			  request.setAttribute("returnUrl", returnUrl);
 			  request.setAttribute("errorMsg", "登录失败,用户名或密码错误!");
 			 return "/ssoUser_login.jsp";
@@ -126,8 +123,11 @@ public class SsoLoginController {
 	 * @param returnUrl
 	 * @return
 	 */
+	@CrossOrigin()//支持ajax跨域
 	@RequestMapping("/ssoUser_logout")
-	public String ssoUser_logout(HttpServletRequest request,HttpServletResponse response,String returnUrl) {
+	public String ssoUser_logout(HttpServletRequest request,HttpServletResponse response
+			,String returnUrl
+			) {
 		 String  ssoSessionId=request.getSession().getId();//获取sso全局sessionId
 		 ssoLoginService.setLogout(ssoSessionId); //sso 会话注销 
 		// request.getSession().invalidate(); 

@@ -1,10 +1,14 @@
 package com.tingcream.ssoClient.configuration;
 
 import java.io.Serializable;
+import java.util.List;
+
+import javax.servlet.DispatcherType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -12,11 +16,8 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
 import com.tingcream.ssoClient.common.SpringContextAware;
-import com.tingcream.ssoClient.mvc.SsoLoginAuthInterceptor;
+import com.tingcream.ssoClient.filter.SsoLoginAuthFilter;
 import com.tingcream.ssoClient.properties.SsoProperties;
 
 /**
@@ -26,8 +27,8 @@ import com.tingcream.ssoClient.properties.SsoProperties;
  */
 @Configuration
 @EnableConfigurationProperties(SsoProperties.class)
-@ComponentScan(basePackages="com.tingcream.ssoClient.mvc")
-public class SsoAutoConfiguration  extends WebMvcConfigurerAdapter  {
+@ComponentScan(basePackages="com.tingcream.ssoClient.controller")
+public class SsoAutoConfiguration   {
 	
 	   
 		@Autowired
@@ -80,17 +81,35 @@ public class SsoAutoConfiguration  extends WebMvcConfigurerAdapter  {
 	    public SpringContextAware  springContextAware() {
 	    	  return new  SpringContextAware();
 	    }
-	     
-	    //注入sso登录拦截器
-	    @Override
-		public void addInterceptors(InterceptorRegistry registry) {
-	    	SsoLoginAuthInterceptor interceptor=new SsoLoginAuthInterceptor();
+	    
+	    
+	    @Bean
+	    public   FilterRegistrationBean  ssoLoginAuthFilterRegistration(
+	    		SessionInfoHelper sessionInfoHelper) {
+	    	
+	    	 FilterRegistrationBean registration = new FilterRegistrationBean();
 	    	 
-	    	interceptor.setSessionInfoHelper(SpringContextAware.getBean(SessionInfoHelper.class));
-	    	interceptor.setSsoCheckLoginUrl(ssoProperties.getSsoServer().getCheckLoginUrl());
-		    registry.addInterceptor(interceptor)
-				    .addPathPatterns("/**");
-			
-		}
+	    	 //filter 过滤器排除路径 
+	    	 List<String> excludePaths= ssoProperties.getSsoClient().getExcludePaths();
+	    	 excludePaths.add(ssoProperties.getSsoClient().getLogoutPage());
+	    	 excludePaths.add("/favicon.ico");
+	    	 
+	    	 //new 过滤器
+	    	SsoLoginAuthFilter filter=  new    SsoLoginAuthFilter();
+	    	filter.setSessionInfoHelper(sessionInfoHelper);
+	    	filter.setSsoCheckLoginUrl(ssoProperties.getSsoServer().getCheckLoginUrl());
+	    	filter.setExcludePaths(excludePaths);
+	    	
+	    	registration.setFilter(filter);
+	    	registration.setName("ssoLoginAuthFilter");
+	    	registration.setOrder(1);
+	    	 
+	    	registration.setDispatcherTypes(DispatcherType.REQUEST);
+	        registration.addUrlPatterns("/*");
+	    	
+	    	return registration;
+	    }
+	    
+  
 
 }

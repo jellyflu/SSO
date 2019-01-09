@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.tingcream.ssoClient.configuration.RedisHelper;
 import com.tingcream.ssoClient.configuration.SessionInfoHelper;
 import com.tingcream.ssoClient.model.SessionInfo;
 import com.tingcream.ssoClient.model.User;

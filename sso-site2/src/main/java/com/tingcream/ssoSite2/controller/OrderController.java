@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.tingcream.ssoClient.annotation.SsoLoginAuth;
 import com.tingcream.ssoClient.configuration.SessionInfoHelper;
 import com.tingcream.ssoClient.model.User;
  
@@ -25,7 +24,6 @@ public class OrderController {
 	private SessionInfoHelper  sessionInfoHelper;
 	
 	//订单信息1   获取登录用户信息
-	@SsoLoginAuth
 	@RequestMapping("/order_info1")
 	public String order_info1(HttpServletRequest request,HttpServletResponse response) {
 	 
@@ -36,7 +34,6 @@ public class OrderController {
 	}
 	
 	//订单信息2   获取登录用户信息
-	@SsoLoginAuth
 	@RequestMapping("/order_info2")
 	public String order_info2(HttpServletRequest request,HttpServletResponse response) {
 		 

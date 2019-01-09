@@ -4,7 +4,7 @@ server:
   port: 8002
   context-path: /
 
-spring:
+spring: 
   application:
     name: sso-site2
   #配置jsp视图     
@@ -28,12 +28,18 @@ spring:
       
 sso: 
   ssoServer:
-    #sso-server 登录验证地址
+    #sso验证用户是否登录 url
     checkLoginUrl: http://www.mysso.com:9001/ssoUser_checkLogin
-    #sso-server 退出地址
+    #sso用户退出 url 
     logoutUrl:  http://www.mysso.com:9001/ssoUser_logout
   ssoClient:
-    #客户端退出回调页面
+    #sso 客户端本地退出回调地址(浏览器重定向)
     logoutPage: /logout
+    #sso 客户端拦截器过滤排除的路径，支持ant表达式
+    excludePaths: /goods_*
+    
+
+ 
+
     
     
